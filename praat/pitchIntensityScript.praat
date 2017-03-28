@@ -1,6 +1,3 @@
-#########################################################
-##### MODULE PITCH AND INTENSITY ##########################################
-#########################################################
 clearinfo
 form Parameters
 	text directory
@@ -10,7 +7,6 @@ endform
 Read from file: directory$ + basename$ + ".Intensity"
 Read from file: directory$ + basename$ + ".Pitch"
 
-# objects in Menu
 pitch$ = "Pitch " + basename$
 int$ = "Intensity " + basename$
 
