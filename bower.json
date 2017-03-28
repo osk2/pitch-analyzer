@@ -1,0 +1,20 @@
+{
+  "name": "pitch-analyzer",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "osk2"
+  ],
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/osk2/pitch-analyzer",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "msr": "^1.3.4"
+  }
+}

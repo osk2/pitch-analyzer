@@ -1,5 +1,5 @@
 node_modules/
 npm-debug.log*
-bower_components
+public/components
 .env
 .DS_Store
