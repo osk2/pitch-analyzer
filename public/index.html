@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pitch Analyzer</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <button class="btn btn-primary btn-record">Record</button>
+      <button class="btn btn-primary btn-stop">Stop</button>
+      <button class="btn btn-primary btn-analyze">Analyze</button>
+    </div>
+  </div>
+  <script src="//cdn.jsdelivr.net/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="js/recorder.js"></script>
+  <script>
+    var input = audio_context.createMediaStreamSource(stream);
+    var recorder = new Recorder(input);
+
+    $('.btn-record').on('click', function () {
+      recorder && recorder.record();
+    });
+
+    $('.btn-stop').on('click', function () {
+      recorder && recorder.stop();
+    });
+
+    $('.btn-analyze').on('click', function () {
+      recorder && recorder.exportWAV(function(blob) {
+        $.ajax({
+          type: 'POST',
+          url: '/upload',
+          data: blob,
+          processData: false,
+          contentType: false
+        }).done(function(data) {
+          
+        });
+      });
+    });
+  </script>
+</body>
+</html>
