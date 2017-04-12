@@ -1,9 +1,12 @@
 {
-  "name": "pitch",
+  "name": "pitch-analyzer",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "csvjson": "^4.1.3",
+    "express": "^4.15.2"
+  },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
