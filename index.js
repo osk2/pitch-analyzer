@@ -5,9 +5,7 @@ const csvjson = require('csvjson');
 const fs = require('fs');
 const app = express();
 const config = {
-  projectName: 'pitch-analyzer',
-  praatPath: function () { return '/var/www/' + this.projectName + '/praat/'},
-  sampleFilename: 'sample',
+  praatScript: __dirname + '/praat-script/',
   uploadPath: 'upload/',
   ca: 'ssl/ca_bundle.crt',
   key: 'ssl/private.key',
@@ -20,12 +18,12 @@ const sslOptions = {
 };
 
 const analyzePitch = (filename) => {
-  const filePath = '/var/www/' + config.projectName + '/upload/';
-  const praatPath = config.praatPath();
+  const filePath = __dirname + '/' + config.uploadPath;
+  const praatScript = config.praatScript;
 
-  exec('praat --run ' + praatPath + 'extractPitchIntensity.praat "' + filePath + '" "' + filename + '"', {stdio:[0,1,2]});
-  exec('praat --run ' + praatPath + 'pitchIntensityScript.praat "' + filePath + '" "' + filename + '"', {stdio:[0,1,2]});
-  const data = fs.readFileSync('upload/' + filename + '.graph', { encoding : 'utf8'});
+  exec('praat --run ' + praatScript + 'extractPitchIntensity.praat "' + filePath + '" "' + filename + '"', {stdio:[0,1,2]});
+  exec('praat --run ' + praatScript + 'pitchIntensityScript.praat "' + filePath + '" "' + filename + '"', {stdio:[0,1,2]});
+  const data = fs.readFileSync('upload/' + filename + '.graph', {encoding : 'utf8'});
   return csvjson.toColumnArray(data, {
     delimiter: '\t',
     quote: '"'
