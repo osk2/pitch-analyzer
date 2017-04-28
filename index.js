@@ -7,7 +7,7 @@ const fs = require('fs');
 const app = express();
 const config = {
   praatScript: __dirname + '/praat-script/',
-  uploadPath: 'upload/',
+  uploadPath: 'public/upload/',
   ca: 'ssl/fullchain.pem',
   key: 'ssl/privkey.pem',
   cert: 'ssl/cert.pem'
@@ -24,7 +24,7 @@ const analyzePitch = (filename) => {
 
   exec('praat --run ' + praatScript + 'extractPitchIntensity.praat "' + filePath + '" "' + filename + '"', {stdio:[0,1,2]});
   exec('praat --run ' + praatScript + 'pitchIntensityScript.praat "' + filePath + '" "' + filename + '"', {stdio:[0,1,2]});
-  const data = fs.readFileSync('upload/' + filename + '.graph', {encoding : 'utf8'});
+  const data = fs.readFileSync(config.uploadPath + filename + '.graph', {encoding : 'utf8'});
   return csvjson.toColumnArray(data, {
     delimiter: '\t',
     quote: '"'
@@ -58,7 +58,7 @@ app.post('/questions/', busboy({immediate: true}), (req, res) => {
   if (busboy) {
     busboy.on('file', function (fieldname, file, filename) {
       question.file = filename;
-      fstream = fs.createWriteStream('upload/' + filename);
+      fstream = fs.createWriteStream(config.uploadPath + filename);
       file.pipe(fstream);
       fstream.on('close', function () {});
     });
