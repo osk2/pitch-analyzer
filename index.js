@@ -1,5 +1,6 @@
 const exec = require('child_process').execSync;
 const express = require('express');
+const busboy = require('connect-busboy');
 const https = require('https');
 const csvjson = require('csvjson');
 const fs = require('fs');
@@ -7,9 +8,9 @@ const app = express();
 const config = {
   praatScript: __dirname + '/praat-script/',
   uploadPath: 'upload/',
-  ca: 'ssl/ca_bundle.crt',
-  key: 'ssl/private.key',
-  cert: 'ssl/certificate.crt'
+  ca: 'ssl/fullchain.pem',
+  key: 'ssl/privkey.pem',
+  cert: 'ssl/cert.pem'
 };
 const sslOptions = {
   ca: fs.readFileSync(config.ca),
@@ -44,7 +45,47 @@ app.get('/analyze/:filename', (req, res) => {
   res.json(analyzePitch(req.params.filename));
 });
 
-https.createServer(sslOptions, app).listen(3000, function() {
-  console.log('Listening on port 3000');
+app.get('/questions/', (req, res) => {
+  res.json(JSON.parse(fs.readFileSync('./questions.json')));
 });
 
+app.post('/questions/', busboy({immediate: true}), (req, res) => {
+  const busboy = req.busboy;
+  let question = {};
+  let questionsList = JSON.parse(fs.readFileSync('./questions.json'));
+  let fstream;
+
+  if (busboy) {
+    busboy.on('file', function (fieldname, file, filename) {
+      question.file = filename;
+      fstream = fs.createWriteStream('upload/' + filename);
+      file.pipe(fstream);
+      fstream.on('close', function () {});
+    });
+
+    busboy.on('field', function (fieldname, val) {
+      switch (fieldname) {
+        case 'question':
+          question.question = val;
+          break;
+        case 'level':
+          question.level = val;
+          break;
+      }
+    });
+
+    busboy.on('finish', function () {
+      questionsList.push(question);
+      fs.writeFile('./questions.json', JSON.stringify(questionsList, null, 2), function(){});
+      analyzePitch(question.file.replace('.wav', ''));
+      res.redirect('back');
+    });
+
+  } else {
+    res.json({'result': false, 'message': 'no req.busboy'});
+  }
+});
+
+https.createServer(sslOptions, app).listen(3000, function () {
+  console.log('Listening on port 3000');
+});

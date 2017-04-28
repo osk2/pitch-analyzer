@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Manually Upload</title>
+</head>
+<body>
+  <form action="/questions" enctype="multipart/form-data" method="post">
+    <input type="file" name="file">
+    <input type="text" name="question" placeholder="題目標題">
+    <select name="level">
+      <option value="low" selected>低</option>
+      <option value="mid">中</option>
+      <option value="high">高</option>
+    </select>
+    <button type="submit">傳！</button>
+  </form>
+  <p>所有資料</p>
+  <pre></pre>
+  <script src="//cdn.jsdelivr.net/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <script>
+    $.getJSON('/questions', function (data) {
+      $('pre').html(JSON.stringify(data, null, 2));
+    });
+  </script>
+</body>
+</html>
