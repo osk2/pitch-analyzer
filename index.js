@@ -4,6 +4,7 @@ const busboy = require('connect-busboy');
 const https = require('https');
 const csvjson = require('csvjson');
 const fs = require('fs');
+const _ = require('lodash');
 const app = express();
 const config = {
   praatScript: __dirname + '/praat-script/',
@@ -32,6 +33,7 @@ const analyzePitch = (filename) => {
 }
 
 app.use(express.static('public'));
+
 app.post('/upload', (req, res) => {
   const date = new Date();
   const filename = date.getTime() + '.wav';
@@ -45,14 +47,30 @@ app.get('/analyze/:filename', (req, res) => {
   res.json(analyzePitch(req.params.filename));
 });
 
-app.get('/questions/', (req, res) => {
+app.get('/questions', (req, res) => {
   res.json(JSON.parse(fs.readFileSync('./questions.json')));
+});
+
+app.get('/chart/:filename', (req, res) => {
+  const data = fs.readFileSync(config.uploadPath + req.params.filename + '.graph', {encoding : 'utf8'});
+  const jsonData = csvjson.toColumnArray(data, {
+    delimiter: '\t',
+    quote: '"'
+  });
+  res.json(jsonData);
+});
+
+app.get('/questions/:level/:count', (req, res) => {
+  let questionsList = JSON.parse(fs.readFileSync('./questions.json'));
+
+  questionsList = _.filter(questionsList, {level: req.params.level});
+  res.json(_.sampleSize(questionsList, req.params.count));
 });
 
 app.post('/questions/', busboy({immediate: true}), (req, res) => {
   const busboy = req.busboy;
-  let question = {};
-  let questionsList = JSON.parse(fs.readFileSync('./questions.json'));
+  const question = {};
+  const questionsList = JSON.parse(fs.readFileSync('./questions.json'));
   let fstream;
 
   if (busboy) {

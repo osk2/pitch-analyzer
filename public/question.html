@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pitch Analyzer</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+  <style>
+    .ct-grid.ct-horizontal {
+      display: none;
+    }
+    .ct-series-a .ct-line,
+    .ct-series-a .ct-point {
+      stroke: rgba(106, 198, 220, .7);
+    }
+    .ct-series-b .ct-line,
+    .ct-series-b .ct-point {
+      stroke: rgba(241, 74, 77, .7);
+    }
+    .text {
+      text-align: center;
+      margin: 1em 0;
+    }
+    .row-action {
+      margin: 1em 0;
+    }
+    .btn-circle {
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+      font-size: 2em;
+    }
+    .btn-record {
+      width: 90px;
+      height: 90px;
+      font-size: 3.5em;
+    }
+    .action {
+      text-align: center;
+      height: 90px;
+      line-height: 90px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 level"></div>
+      <h2 class="col-md-12 text">你好</h2>
+      <div class="col-md-12 pitch-chart"></div>
+      <div class="row row-action">
+        <div class="col-md-4 col-sm-4 col-xs-4 action">
+          <button class="btn btn-primary btn-circle btn-play">
+            <i class="fa fa-volume-up" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-4 action">
+          <button class="btn btn-danger btn-circle btn-record">
+            <i class="fa fa-microphone" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div class="col-md-4 col-sm-4 col-xs-4 action">
+          <button class="btn btn-primary btn-circle btn-replay">
+            <i class="fa fa-play" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+      <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2 action">
+        <button class="btn btn-primary btn-block btn-lg btn-next">下一題</button>
+      </div>
+      <div class="clearfix"></div>
+      <p>&nbsp;</p>
+    </div>
+  </div>
+  <script src="//cdn.jsdelivr.net/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="//cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js" integrity="sha256-IyWBFJYclFY8Pn32bwWdSHmV4B9M5mby5bhPHEmeY8w=" crossorigin="anonymous"></script>
+  <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+  <script src="//cdn.jsdelivr.net/hammerjs/2.0.8/hammer.min.js" integrity="sha256-eVNjHw5UeU0jUqPPpZHAkU1z4U+QFBBY488WvueTm88=" crossorigin="anonymous"></script>
+  <script src="//cdn.jsdelivr.net/howler.js/2.0.3/howler.min.js" integrity="sha256-sUh6t1lGTmpr7EDXSXW54Ncrkhdd+0AI/FJjgEX1u40=" crossorigin="anonymous"></script>
+  <script src="js/recorder.js"></script>
+  <script>
+    var audioContext;
+    var recorder;
+    var fileName = '';
+    var chart;
+    var currentPitchs;
+    var questions;
+    var currentLevel = 0;
+
+    var startUserMedia = function (stream) {
+      var input = audioContext.createMediaStreamSource(stream);
+      recorder = new Recorder(input);
+    }
+
+    var getLevel = function () {
+      var currentQuestion = questions[currentLevel];
+      var recordBtn = new Hammer($('.btn-record')[0]);
+
+      if (currentLevel >= 9) {
+        $('.btn-next').html('完成');
+      }
+      if (currentLevel >= 10) {
+        // redirect to finishing page
+        return;
+      }
+      $('.level').html((currentLevel + 1) + ' / 10');
+      $('.text').html(currentQuestion.question);
+      $.getJSON('/chart/' + currentQuestion.file.split('.wav')[0], function (data) {
+        currentPitchs = data.pitch;
+        generateChart(currentPitchs);
+      });
+
+      $('.btn-play')
+      .off()
+      .on('click', function () {
+        var sound = new Howl({
+          src: ['upload/' + currentQuestion.file]
+        });
+        sound.play();
+      });
+
+      recordBtn.on('press', function () {
+        recorder.clear();
+        recorder.record();
+      });
+
+      recordBtn.on('pressup', function () {
+        recorder.record();
+        recorder.stop();
+        recorder.exportWAV(function (blob) {
+          analyzePitch(blob);
+        });
+      });
+
+      currentLevel++;
+    }
+
+    var analyzePitch = function (blob) {
+      $.ajax({
+        type: 'POST',
+        url: '/upload',
+        data: blob,
+        processData: false,
+        contentType: 'audio/wav'
+      }).done(function(data) {
+        if (data.success) {
+          var sound = new Howl({
+            src: ['upload/' + data.file + '.wav']
+          });
+
+          fileName = data.file;
+          $('audio').remove();
+          $('.pitch-chart').empty();
+          $('#my-recording').remove();
+          $('.btn-replay')
+          .off('click')
+          .on('click', function () {
+            sound.play();
+          })
+          $.getJSON('analyze/' + fileName, function (data) {
+            generateChart(data.pitch, true);
+          });
+        }
+      });
+    }
+
+    var loadLevel = function (callback) {
+      var level = window.location.search.substr(1).split('=')[1];
+      var levelName = '';
+
+      switch (level) {
+        case '1':
+          levelName = 'low';
+          break;
+        case '2':
+          levelName = 'mid';
+          break;
+        case '3':
+        default:
+          levelName = 'high';
+          break;
+      }
+
+      $.getJSON('/questions/' + levelName + '/10', function (data) {
+        questions = data;
+        callback(data);
+        $('.btn-next').on('click', function () {
+          getLevel();
+        });
+      });
+    }
+
+    var generateChart = function (pitchs, update) {
+      var pitchArray = [];
+      var chartData = {
+        labels: [],
+        series: [[]]
+      };
+
+      _.each(pitchs, function (pitch) {
+        if (pitch === '--undefined--') {
+          pitchArray.push(undefined);
+        } else {
+          pitchArray.push(parseInt(pitch));
+        }
+      });
+      if (update) {
+        chartData.series[1] = pitchArray;
+        pitchArray = [];
+        _.each(currentPitchs, function (pitch) {
+          if (pitch === '--undefined--') {
+            pitchArray.push(undefined);
+          } else {
+            pitchArray.push(parseInt(pitch));
+          }
+        });
+        chartData.series[0] = pitchArray;
+        chart.update(chartData);
+      } else {
+        chartData.series[0] = pitchArray;
+        drawChart(chartData);
+      }
+    }
+
+    var drawChart = function (chartData) {
+      $('.pitch-chart').empty();
+      chart = new Chartist.Line('.pitch-chart', chartData, {
+        axisY: {
+          offset: 0
+        },
+        axisX: {
+          offset: 0
+        },
+        showPoint: false,
+        lineSmooth: Chartist.Interpolation.simple({
+          divisor: 2
+        })
+      });
+    }
+
+    $(function () {
+      try {
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
+        window.URL = window.URL || window.webkitURL;
+        
+        audioContext = new AudioContext;
+      } catch (e) {
+        alert('No web audio support in this browser!');
+      }
+      
+      navigator.getUserMedia({audio: true}, startUserMedia, function(){});
+      loadLevel(getLevel);
+    });
+  </script>
+</body>
+</html>

@@ -1,126 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pitch Analyzer</title>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
-  <style>
-    .ct-grid.ct-horizontal {
-      display: none;
-    }
-  </style>
 </head>
 <body>
   <div class="container">
     <div class="row">
-      <button class="btn btn-primary btn-record">Record</button>
-      <button class="btn btn-primary btn-stop">Stop</button>
-      <button class="btn btn-primary btn-analyze">Upload and Analyze</button>
-      <p>&nbsp;</p>
-      <pre>No data available</pre>
-      <span></span>
-      <div class="pitch-chart"></div>
+      <a href="level.html" class="btn btn-primary">開始</a>
     </div>
   </div>
-  <script src="//cdn.jsdelivr.net/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
-  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  <script src="//cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js" integrity="sha256-IyWBFJYclFY8Pn32bwWdSHmV4B9M5mby5bhPHEmeY8w=" crossorigin="anonymous"></script>
-  <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
-  <script src="js/recorder.js"></script>
-  <script>
-    var audioContext;
-    var recorder;
-    var fileName = '';
-    var chart;
-
-    function startUserMedia(stream) {
-      var input = audioContext.createMediaStreamSource(stream);
-      recorder = new Recorder(input);
-    }
-
-    window.onload = function() {
-      try {
-        // webkit shim
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia;
-        window.URL = window.URL || window.webkitURL;
-        
-        audioContext = new AudioContext;
-      } catch (e) {
-        alert('No web audio support in this browser!');
-      }
-      
-      navigator.getUserMedia({audio: true}, startUserMedia, function(e) {});
-    };
-
-    $('.btn-record').on('click', function () {
-      recorder.clear();
-      recorder.record();
-      $('span').html('Recording...');
-    });
-
-    $('.btn-stop').on('click', function () {
-      recorder && recorder.stop();
-      $('span').html('Stopped');
-    });
-
-    $('.btn-analyze').on('click', function () {
-      var startTime = new Date();
-      $('span').html('Analyzing...');
-      recorder && recorder.exportWAV(function(blob) {
-        $.ajax({
-          type: 'POST',
-          url: '/upload',
-          data: blob,
-          processData: false,
-          contentType: 'audio/wav'
-        }).done(function(data) {
-          if (data.success) {
-            fileName = data.file;
-            $('audio').remove();
-            $('.row').append('<audio controls="controls"><source src="https://osk2.me/pitch-analyzer/upload/'+ data.file +'.wav" type="audio/wav"></audio>');
-            $.getJSON('analyze/' + fileName, function (data) {
-              var endTime = new Date();
-              $('pre').html(JSON.stringify(data));
-              $('span').html('Done, used ' + (endTime.getSeconds() - startTime.getSeconds()) + ' seconds');
-              generateChart(data.pitch);
-            });
-          }
-        });
-      });
-    });
-
-    var generateChart = function (pitchs) {
-      var pitchArray = [];
-      var chartData = {
-        labels: [],
-        series: [[]]
-      };
-
-      _.each(pitchs, function (pitch) {
-        if (pitch === '--undefined--') {
-          pitchArray.push(undefined);
-        } else {
-          pitchArray.push(parseInt(pitch));
-        }
-      });
-      chartData.series[0] = pitchArray;
-
-      $('.pitch-chart').empty();
-      chart = new Chartist.Line('.pitch-chart', chartData, {
-        axisY: {
-          offset: 0
-        },
-        axisX: {
-          offset: 0
-        },
-        showPoint: false,
-        lineSmooth: Chartist.Interpolation.simple({
-          divisor: 2
-        })
-      });
-    }
-  </script>
 </body>
 </html>

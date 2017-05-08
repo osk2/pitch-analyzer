@@ -6,7 +6,8 @@
   "dependencies": {
     "connect-busboy": "0.0.2",
     "csvjson": "^4.1.3",
-    "express": "^4.15.2"
+    "express": "^4.15.2",
+    "lodash": "^4.17.4"
   },
   "devDependencies": {},
   "scripts": {
