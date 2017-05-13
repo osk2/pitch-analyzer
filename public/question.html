@@ -173,25 +173,6 @@
         sound.play();
       });
 
-      recordBtn.off('press').on('press', function () {
-        $('.btn-record').addClass('btn-red').removeClass('btn-blue');
-        recorder.clear();
-        recorder.record();
-      });
-
-      recordBtn.off('pressup').on('pressup', function () {
-        $('.btn-record').addClass('btn-blue').removeClass('btn-red');
-        recorder.record();
-        recorder.stop();
-        recorder.exportWAV(function (blob) {
-          analyzePitch(blob);
-          $('.btn-replay, .btn-next').addClass('btn-blue').removeClass('btn-grey');
-          $('.btn-next').one('click', function () {
-            getLevel();
-          });
-        });
-      });
-
       currentLevel++;
     }
 
@@ -308,6 +289,25 @@
       
       navigator.getUserMedia({audio: true}, startUserMedia, function(){});
       loadLevel(getLevel);
+
+      recordBtn.on('press', function () {
+        $('.btn-record').addClass('btn-red').removeClass('btn-blue');
+        recorder.clear();
+        recorder.record();
+      });
+
+      recordBtn.on('pressup', function () {
+        $('.btn-record').addClass('btn-blue').removeClass('btn-red');
+        recorder.record();
+        recorder.stop();
+        recorder.exportWAV(function (blob) {
+          analyzePitch(blob);
+          $('.btn-replay, .btn-next').addClass('btn-blue').removeClass('btn-grey');
+          $('.btn-next').one('click', function () {
+            getLevel();
+          });
+        });
+      });
     });
   </script>
 </body>
