@@ -186,7 +186,7 @@
         recorder.exportWAV(function (blob) {
           analyzePitch(blob);
           $('.btn-replay, .btn-next').addClass('btn-blue').removeClass('btn-grey');
-          $('.btn-next').on('click', function () {
+          $('.btn-next').one('click', function () {
             getLevel();
           });
         });
