@@ -5,17 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pitch Analyzer</title>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <style>
+    * {
+      color: #1E2B34;
+    }
+    body {
+      background-color: #FBFBFC;
+    }
+    button:focus {
+      outline-style: none !important;
+      border: none !important;
+    }
+    .btn {
+      margin: 1.5em 0;
+      border-radius: 30px;
+      padding: .8em;
+      font-size: 1.2em;
+      border-color: #24C2E4;
+      background-color: #24C2E4;
+    }
+    .btn-primary:hover {
+      border-color: #24C2E4;
+      background-color: #24C2E4;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <div class="row" style="text-align: center;">
-      <h1>選擇練習模式</h1>
       <p>&nbsp;</p>
-      <p>依聲調發音難度級別<br>建議依順序練習已獲得最佳練習體驗</p>
+      <div class="col-md-6 col-md-offset-3">
+        <h2>選擇練習模式</h2>
+        <p>&nbsp;</p>
+        <p>&nbsp;</p>
+        <h5>依聲調發音難度級別<br>建議依順序練習已獲得最佳練習體驗</h5>
+      </div>
       <p>&nbsp;</p>
-      <a href="question.html?level=1" class="btn btn-primary btn-block">初級</a>
-      <a href="question.html?level=2" class="btn btn-primary btn-block">中級</a>
-      <a href="question.html?level=3" class="btn btn-primary btn-block">高級</a>
+      <p>&nbsp;</p>
+      <p>&nbsp;</p>
+      <div class="col-xs-10 col-xs-offset-1">
+        <a href="question.html?level=1" class="btn btn-primary btn-block">初級</a>
+        <a href="question.html?level=2" class="btn btn-primary btn-block">中級</a>
+        <a href="question.html?level=3" class="btn btn-primary btn-block">高級</a>
+      </div>
     </div>
   </div>
   <script src="//cdn.jsdelivr.net/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>

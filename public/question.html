@@ -7,6 +7,33 @@
   <link rel="stylesheet" href="//cdn.jsdelivr.net/fontawesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
   <link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
   <style>
+    * {
+      color: #1E2B34;
+    }
+    body {
+      background-color: #FBFBFC;
+    }
+    button:focus {
+      outline-style: none !important;
+      border: none !important;
+    }
+    .btn {
+      border-radius: 30px;
+    }
+    .btn-blue {
+      border-color: #24C2E4;
+      background-color: #24C2E4;
+    }
+    .btn-red,
+    .btn-primary.btn-red:hover {
+      border-color: #F14A4D;
+      background-color: #F14A4D;
+    }
+    .btn-grey,
+    .btn-primary.btn-grey:hover {
+      border-color: #BFBFBF;
+      background-color: #BFBFBF;
+    }
     .ct-grid.ct-horizontal {
       display: none;
     }
@@ -25,6 +52,13 @@
     .row-action {
       margin: 1em 0;
     }
+    .btn-primary:hover {
+      border-color: #24C2E4;
+      background-color: #24C2E4;
+    }
+    .btn img {
+      width: 100%;
+    }
     .btn-circle {
       border-radius: 50%;
       width: 70px;
@@ -35,6 +69,9 @@
       width: 90px;
       height: 90px;
       font-size: 3.5em;
+    }
+    .btn-record img {
+      width: 75%;
     }
     .action {
       text-align: center;
@@ -52,23 +89,23 @@
       <div class="col-md-12 pitch-chart"></div>
       <div class="row row-action">
         <div class="col-md-4 col-sm-4 col-xs-4 action">
-          <button class="btn btn-primary btn-circle btn-play">
-            <i class="fa fa-volume-up" aria-hidden="true"></i>
+          <button class="btn btn-primary btn-circle btn-blue btn-play">
+            <img src="img/system-voice-icon.png">
           </button>
         </div>
         <div class="col-md-4 col-sm-4 col-xs-4 action">
-          <button class="btn btn-danger btn-circle btn-record">
-            <i class="fa fa-microphone" aria-hidden="true"></i>
+          <button class="btn btn-circle btn-blue btn-record">
+            <img src="img/mic-icon.png">
           </button>
         </div>
         <div class="col-md-4 col-sm-4 col-xs-4 action">
-          <button class="btn btn-primary btn-circle btn-replay">
-            <i class="fa fa-play" aria-hidden="true"></i>
+          <button class="btn btn-primary btn-circle btn-grey btn-replay">
+            <img src="img/user-voice-icon.png">
           </button>
         </div>
       </div>
       <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-8 col-xs-offset-2 action">
-        <button class="btn btn-primary btn-block btn-lg btn-next">下一題</button>
+        <button class="btn btn-primary btn-block btn-lg btn-grey btn-next">下一題</button>
       </div>
       <div class="clearfix"></div>
       <p>&nbsp;</p>
@@ -112,6 +149,7 @@
         currentPitchs = data.pitch;
         generateChart(currentPitchs);
       });
+      $('.btn-replay, btn-next').addClass('btn-grey').removeClass('btn-blue');
 
       $('.btn-play')
       .off()
@@ -123,15 +161,18 @@
       });
 
       recordBtn.on('press', function () {
+        $('.btn-record').addClass('btn-red').removeClass('btn-blue');
         recorder.clear();
         recorder.record();
       });
 
       recordBtn.on('pressup', function () {
+        $('.btn-record').addClass('btn-blue').removeClass('btn-red');
         recorder.record();
         recorder.stop();
         recorder.exportWAV(function (blob) {
           analyzePitch(blob);
+          $('.btn-replay, btn-next').addClass('btn-blue').removeClass('btn-grey');
         });
       });
 
