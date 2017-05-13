@@ -276,7 +276,7 @@
     }
 
     $(function () {
-      var recordBtn = new Hammer($('.btn-record')[0]);
+      var recordBtn = new Hammer($('.btn-record')[0], {threshold: 15});
 
       try {
         window.AudioContext = window.AudioContext || window.webkitAudioContext;
