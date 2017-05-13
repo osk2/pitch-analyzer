@@ -173,13 +173,13 @@
         sound.play();
       });
 
-      recordBtn.on('press', function () {
+      recordBtn.off('press').on('press', function () {
         $('.btn-record').addClass('btn-red').removeClass('btn-blue');
         recorder.clear();
         recorder.record();
       });
 
-      recordBtn.on('pressup', function () {
+      recordBtn.off('pressup').on('pressup', function () {
         $('.btn-record').addClass('btn-blue').removeClass('btn-red');
         recorder.record();
         recorder.stop();
