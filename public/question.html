@@ -113,7 +113,6 @@
         <button class="btn btn-primary btn-block btn-lg btn-grey btn-next">下一題</button>
       </div>
       <div class="clearfix"></div>
-      <p>&nbsp;</p>
     </div>
   </div>
   <script src="//cdn.jsdelivr.net/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
@@ -160,7 +159,10 @@
         currentPitchs = data.pitch;
         generateChart(currentPitchs);
       });
-      $('.btn-replay, .btn-next').addClass('btn-grey').removeClass('btn-blue');
+      $('.btn-replay, .btn-next')
+      .addClass('btn-grey')
+      .removeClass('btn-blue');
+      $('.btn-next').off('click');
 
       $('.btn-play')
       .off()
@@ -184,6 +186,9 @@
         recorder.exportWAV(function (blob) {
           analyzePitch(blob);
           $('.btn-replay, .btn-next').addClass('btn-blue').removeClass('btn-grey');
+          $('.btn-next').on('click', function () {
+            getLevel();
+          });
         });
       });
 
@@ -239,9 +244,6 @@
       $.getJSON('/questions/' + levelName + '/10', function (data) {
         questions = data;
         callback(data);
-        $('.btn-next').on('click', function () {
-          getLevel();
-        });
       });
     }
 
