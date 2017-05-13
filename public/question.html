@@ -79,12 +79,15 @@
       line-height: 90px;
       vertical-align: middle;
     }
+    .level {
+      text-align: center; 
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="row">
-      <div class="col-md-12 level"></div>
+      <h3 class="col-md-12 level"></h3>
       <h2 class="col-md-12 text"></h2>
       <div class="col-md-12 pitch-chart"></div>
       <div class="row row-action">
@@ -137,7 +140,11 @@
       var recordBtn = new Hammer($('.btn-record')[0]);
 
       if (currentLevel >= 9) {
-        $('.btn-next').html('完成');
+        $('.btn-next')
+        .html('完成')
+        .one('click', function () {
+          window.location.href = './finish.html';
+        });
       }
       if (currentLevel >= 10) {
         // redirect to finishing page
