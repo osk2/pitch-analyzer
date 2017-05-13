@@ -97,7 +97,7 @@
           </button>
         </div>
         <div class="col-md-4 col-sm-4 col-xs-4 action">
-          <button class="btn btn-circle btn-blue btn-record">
+          <button class="btn btn-circle btn-blue btn-record" oncontextmenu="return false">
             <img src="img/mic-icon.png">
           </button>
         </div>
@@ -142,6 +142,8 @@
       if (currentLevel >= 9) {
         $('.btn-next')
         .html('完成')
+        .addClass('btn-blue')
+        .removeClass('btn-grey')
         .one('click', function () {
           window.location.href = './finish.html';
         });
@@ -156,7 +158,7 @@
         currentPitchs = data.pitch;
         generateChart(currentPitchs);
       });
-      $('.btn-replay, btn-next').addClass('btn-grey').removeClass('btn-blue');
+      $('.btn-replay, .btn-next').addClass('btn-grey').removeClass('btn-blue');
 
       $('.btn-play')
       .off()
@@ -179,7 +181,7 @@
         recorder.stop();
         recorder.exportWAV(function (blob) {
           analyzePitch(blob);
-          $('.btn-replay, btn-next').addClass('btn-blue').removeClass('btn-grey');
+          $('.btn-replay, .btn-next').addClass('btn-blue').removeClass('btn-grey');
         });
       });
 
