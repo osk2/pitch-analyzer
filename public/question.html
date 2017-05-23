@@ -49,6 +49,18 @@
       text-align: center;
       margin: 1em 0;
     }
+    .pitch-chart {
+      position: relative;
+    }
+    .progress-cursor {
+      position: absolute;
+      right: calc(100% - 2em);
+      width: 2em;
+      display: none;
+      -webkit-transition: right 3s linear;
+         -moz-transition: right 3s linear;
+              transition: right 3s linear;
+    }
     .row-action {
       margin: 1em 0;
     }
@@ -90,7 +102,9 @@
     <div class="row">
       <h3 class="col-md-12 level"></h3>
       <h2 class="col-md-12 text"></h2>
-      <div class="col-md-12 pitch-chart"></div>
+      <div class="col-md-12 pitch-chart">
+        <img src="img/cursor-icon.png" class="progress-cursor">
+      </div>
       <div class="row row-action">
         <div class="col-md-4 col-sm-4 col-xs-4 action">
           <button class="btn btn-primary btn-circle btn-blue btn-play">
@@ -293,12 +307,20 @@
 
       recordBtn.on('press', function () {
         $('.btn-record').addClass('btn-red').removeClass('btn-blue');
+        $('.progress-cursor').show().animate({
+          right: 0
+        });
         recorder.clear();
         recorder.record();
       });
 
       recordBtn.on('pressup', function () {
         $('.btn-record').addClass('btn-blue').removeClass('btn-red');
+        $('.progress-cursor')
+        .hide()
+        .css({
+          right: 'calc(100% - 2em)'
+        });
         recorder.record();
         recorder.stop();
         recorder.exportWAV(function (blob) {
