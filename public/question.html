@@ -304,7 +304,7 @@
         recorder.exportWAV(function (blob) {
           analyzePitch(blob);
           $('.btn-replay, .btn-next').addClass('btn-blue').removeClass('btn-grey');
-          $('.btn-next').one('click', function () {
+          $('.btn-next').off('click').on('click', function () {
             getLevel();
           });
         });
