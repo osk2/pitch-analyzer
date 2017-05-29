@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pitch Analyzer</title>
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="animations.css">
   <style>
     * {
       color: #1E2B34;
@@ -27,10 +28,65 @@
       border-color: #24C2E4;
       background-color: #24C2E4;
     }
+    .index-trigger {
+      width: 100%;
+      position: fixed;
+      bottom: 2em;
+    }
+    .index-trigger h2 {
+      font-size: 1.5em;
+    }
+    .tutorial-trigger {
+      font-size: .8em;
+      text-align: center;
+    }
+    .tutorial-trigger img {
+      width: 2em;
+    }
+    .tutorial {
+      visibility: hidden;
+      margin: 1em 0 3em 0;
+    }
+    .tutorial.active {
+      width: 100%;
+      height: 100%;
+      overflow: scroll;
+      position: fixed;
+      top: 0;
+    }
+    .card {
+      padding: .5em 0;
+      margin: 2em .5em;
+      background-color: #fff;
+      border-radius: 7px;
+      box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, .2);
+    }
+    .card .title {
+      padding: .5em 0;
+      color: #24C2E4;
+      font-size: 1.5em;
+      border-bottom: 5px rgba(106, 198, 220, .7) solid;
+      display: inline-block;
+    }
+    .card .content {
+      padding: 0 1.5em;
+      margin-top: 1em;
+      line-height: 2em;
+    }
+    .card .img-row {
+      margin: 1em 0;
+    }
+    .card img {
+      width: 3em;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="index-trigger tutorial-trigger">
+    <img src="img/swipe-up-icon.png">
+    <h2>操作方法</h2>
+  </div>
+  <div class="container index">
     <div class="row">
       <p>&nbsp;</p>
       <p>&nbsp;</p>
@@ -47,5 +103,70 @@
       </div>
     </div>
   </div>
+  <div class="tutorial container">
+    <div class="row">
+      <div class="col-md-8 col-md-offset-2" style="text-align: center;">
+        <div class="tutorial-trigger">
+          <img src="img/swipe-up-icon.png">
+          <h2>操作方法</h2>
+        </div>
+        <div class="card">
+          <h2 class="title">第一步</h2>
+          <p class="content">注意聽每個題目的語音<br>按住錄音鍵並跟隨游標節奏跟讀一次<br>紅色線段為你的聲調 試著觀察與正確聲調的差異吧</p>
+          <div class="row img-row">
+            <div class="col-xs-6">
+              <img src="img/tone-instruction-1.png">
+            </div>
+            <div class="col-xs-6">
+              <img src="img/tone-instruction-2.png">
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h2 class="title">第二步</h2>
+          <p class="content">了解每個曲線所代表的聲調</p>
+          <div class="row img-row">
+            <div class="col-xs-3">
+              <img src="img/tone-1.png">
+              <p>一聲</p> 
+            </div>
+            <div class="col-xs-3">
+              <img src="img/tone-2.png">
+              <p>二聲</p>
+            </div>
+            <div class="col-xs-3">
+              <img src="img/tone-3.png">
+              <p>三聲</p> 
+            </div>
+            <div class="col-xs-3">
+              <img src="img/tone-4.png">
+              <p>四聲</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="//cdn.jsdelivr.net/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <script>
+    var istutorial = false;
+    var showTutorial = function () {
+      if (!istutorial) {
+        $('.tutorial').addClass('slideUp active');
+        $('.index-trigger').hide();
+        $('.index').hide();
+        istutorial = !istutorial;
+      } else {
+        $('.tutorial').removeClass('slideUp active');
+        $('.index-trigger').show();
+        $('.index').show();
+        istutorial = !istutorial;
+      }
+    }
+
+    $('.tutorial-trigger').on('click', function () {
+      showTutorial();
+    });
+  </script>
 </body>
 </html>
