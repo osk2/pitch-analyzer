@@ -5,7 +5,7 @@
   "authors": [
     "osk2"
   ],
-  "license": "UNLICENSED",
+  "license": "MIT",
   "homepage": "https://github.com/osk2/pitch-analyzer",
   "ignore": [
     "**/.*",
