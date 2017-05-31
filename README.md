@@ -1,6 +1,6 @@
 # pitch-analyzer
 
-Help people practicing pronunciation
+Help hearing-impaired people practicing Chinese pronunciation
 
 <p>
   <img src="screenshot-index.png" width="30%">
