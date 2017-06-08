@@ -61,13 +61,15 @@ const config = {
 
 Server will listen on port 3000 by default
 
+## Reference
+
+Domínguez, M., I. Latorre, M. Farrús, J. Codina and L. Wanner (2016). Praat on the Web: An Upgrade of Praat for Semi-Automatic Speech Annotation. In Proceedings of the 25th International Conference on Computational Linguistics, Osaka, Japan.
 
 ## License
 
 This project is licensed under the MIT license.
 
 please read [LICENSE](LICENSE) for more detail.
-
 
 ### Praat Script
 
