@@ -1,4 +1,4 @@
-# pitch-analyzer
+# Pitch Analyzer
 
 Help hearing-impaired people practicing Chinese pronunciation
 
@@ -33,17 +33,19 @@ npm install
 node .
 ```
 
+Server will listening on port 3000.
+
 ## Note
 
 ### Add Questions
 
-You have to upload your own questions at `/upload.html` first.
+You have to upload your own questions through `/upload.html` first.
 
 ### SSL
 
-Server must enable SSL due to security policy of WebRTC.
+Server must be SSL-enabled due to security policy of WebRTC.
 
-Copy all SSL-related files into [`/ssl`](/ssl), you may want to change path listed below at [index.js](https://github.com/osk2/pitch-analyzer/blob/80293e128659c8f53d95717de7abd9259f90bda4/index.js#L12-L14).
+Copy all SSL-related files into [`/ssl`](/ssl), you may want to change path or filename listed below at [index.js](https://github.com/osk2/pitch-analyzer/blob/80293e128659c8f53d95717de7abd9259f90bda4/index.js#L12-L14).
 
 ```js
 ...
@@ -59,7 +61,7 @@ const config = {
 
 ### Port
 
-Server will listen on port 3000 by default
+Server will listen on port 3000 by default. It can be changed at [index.js](https://github.com/osk2/pitch-analyzer/blob/2d71fd054a3bc76cae65f6300da58621743a529a/index.js#L107)
 
 ## Reference
 
