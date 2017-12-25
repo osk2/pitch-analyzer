@@ -7,7 +7,7 @@ Help hearing-impaired people practicing Chinese pronunciation
   <img src="screenshot-challenge.png" width="30%">
 </p>
 
-## Prerequirement
+## Prerequisites
 
 ### Praat
 
@@ -37,15 +37,15 @@ Server will listening on port 3000.
 
 ## Note
 
-### Add Questions
+### Add Levels
 
-You have to upload your own questions through `/upload.html` first.
+You will need to upload your own levels through `/upload.html` first.
 
 ### SSL
 
 Server must be SSL-enabled due to security policy of WebRTC.
 
-Copy all SSL-related files into [`/ssl`](/ssl), you may want to change path or filename listed below at [index.js](https://github.com/osk2/pitch-analyzer/blob/80293e128659c8f53d95717de7abd9259f90bda4/index.js#L12-L14).
+Copy all SSL-related files into [`/ssl`](/ssl), you may want to change path or filename listed below in [index.js](https://github.com/osk2/pitch-analyzer/blob/80293e128659c8f53d95717de7abd9259f90bda4/index.js#L12-L14).
 
 ```js
 ...
@@ -61,7 +61,7 @@ const config = {
 
 ### Port
 
-Server will listen on port 3000 by default. It can be changed at [index.js](https://github.com/osk2/pitch-analyzer/blob/2d71fd054a3bc76cae65f6300da58621743a529a/index.js#L107)
+Server will listen on port 3000 by default. It can be changed in [index.js](https://github.com/osk2/pitch-analyzer/blob/2d71fd054a3bc76cae65f6300da58621743a529a/index.js#L107)
 
 ## Reference
 
@@ -71,7 +71,7 @@ Domínguez, M., I. Latorre, M. Farrús, J. Codina and L. Wanner (2016). Praat on
 
 This project is licensed under the MIT license.
 
-please read [LICENSE](LICENSE) for more detail.
+please read [LICENSE](LICENSE) for detailed info.
 
 ### Praat Script
 
